@@ -7,21 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F51016011BEF88ED0001A255 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51016001BEF88ED0001A255 /* OptionsViewController.swift */; };
+		F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */; };
+		F510160E1BEFC64E0001A255 /* DrawingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160D1BEFC64E0001A255 /* DrawingOptions.swift */; };
+		F51016101BEFCAF70001A255 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160F1BEFCAF70001A255 /* Stroke.swift */; };
+		F51631351BF112A2005D997B /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51631341BF112A2005D997B /* Layer.swift */; };
 		F52B74EC1BEF0660009612F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74EB1BEF0660009612F8 /* AppDelegate.swift */; };
-		F52B74EE1BEF0660009612F8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74ED1BEF0660009612F8 /* ViewController.swift */; };
+		F52B74EE1BEF0660009612F8 /* DrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74ED1BEF0660009612F8 /* DrawingViewController.swift */; };
 		F52B74F11BEF0660009612F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F52B74EF1BEF0660009612F8 /* Main.storyboard */; };
 		F52B74F31BEF0660009612F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F21BEF0660009612F8 /* Assets.xcassets */; };
 		F52B74F61BEF0660009612F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */; };
+		F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74FD1BEF06E3009612F8 /* DrawingView.swift */; };
+		F58F68321BF5098100F59996 /* LayerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F58F68311BF5098100F59996 /* LayerTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F51016001BEF88ED0001A255 /* OptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
+		F510160D1BEFC64E0001A255 /* DrawingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingOptions.swift; sourceTree = "<group>"; };
+		F510160F1BEFCAF70001A255 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
+		F51631341BF112A2005D997B /* Layer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layer.swift; sourceTree = "<group>"; };
 		F52B74E81BEF0660009612F8 /* Drawn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drawn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F52B74EB1BEF0660009612F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F52B74ED1BEF0660009612F8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F52B74ED1BEF0660009612F8 /* DrawingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewController.swift; sourceTree = "<group>"; };
 		F52B74F01BEF0660009612F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F52B74F21BEF0660009612F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F52B74F51BEF0660009612F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F52B74F71BEF0660009612F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F52B74FD1BEF06E3009612F8 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		F58F68311BF5098100F59996 /* LayerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +49,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F51016041BEFACC50001A255 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F52B74ED1BEF0660009612F8 /* DrawingViewController.swift */,
+				F51016001BEF88ED0001A255 /* OptionsViewController.swift */,
+				F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */,
+				F58F68311BF5098100F59996 /* LayerTableViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		F51016051BEFACD10001A255 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F52B74FD1BEF06E3009612F8 /* DrawingView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		F51016061BEFACE00001A255 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F52B74EB1BEF0660009612F8 /* AppDelegate.swift */,
+				F52B74F71BEF0660009612F8 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F51016071BEFACF50001A255 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				F52B74EF1BEF0660009612F8 /* Main.storyboard */,
+				F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */,
+				F52B74F21BEF0660009612F8 /* Assets.xcassets */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		F510160C1BEFC6420001A255 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F510160D1BEFC64E0001A255 /* DrawingOptions.swift */,
+				F510160F1BEFCAF70001A255 /* Stroke.swift */,
+				F51631341BF112A2005D997B /* Layer.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		F52B74DF1BEF0660009612F8 = {
 			isa = PBXGroup;
 			children = (
@@ -54,12 +116,11 @@
 		F52B74EA1BEF0660009612F8 /* Drawn */ = {
 			isa = PBXGroup;
 			children = (
-				F52B74EB1BEF0660009612F8 /* AppDelegate.swift */,
-				F52B74ED1BEF0660009612F8 /* ViewController.swift */,
-				F52B74EF1BEF0660009612F8 /* Main.storyboard */,
-				F52B74F21BEF0660009612F8 /* Assets.xcassets */,
-				F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */,
-				F52B74F71BEF0660009612F8 /* Info.plist */,
+				F510160C1BEFC6420001A255 /* Models */,
+				F51016041BEFACC50001A255 /* View Controllers */,
+				F51016051BEFACD10001A255 /* Views */,
+				F51016071BEFACF50001A255 /* Assets */,
+				F51016061BEFACE00001A255 /* Supporting Files */,
 			);
 			path = Drawn;
 			sourceTree = "<group>";
@@ -96,6 +157,7 @@
 				TargetAttributes = {
 					F52B74E71BEF0660009612F8 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = 52W2H99QHH;
 					};
 				};
 			};
@@ -135,8 +197,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F52B74EE1BEF0660009612F8 /* ViewController.swift in Sources */,
+				F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */,
+				F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */,
+				F52B74EE1BEF0660009612F8 /* DrawingViewController.swift in Sources */,
+				F51631351BF112A2005D997B /* Layer.swift in Sources */,
+				F510160E1BEFC64E0001A255 /* DrawingOptions.swift in Sources */,
+				F51016011BEF88ED0001A255 /* OptionsViewController.swift in Sources */,
 				F52B74EC1BEF0660009612F8 /* AppDelegate.swift in Sources */,
+				F58F68321BF5098100F59996 /* LayerTableViewController.swift in Sources */,
+				F51016101BEFCAF70001A255 /* Stroke.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +318,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Drawn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skyapps.Drawn;
@@ -260,6 +330,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Drawn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skyapps.Drawn;
@@ -286,6 +357,7 @@
 				F52B74FC1BEF0660009612F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
