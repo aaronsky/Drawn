@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class DrawingViewController: UIViewController {
     
@@ -18,6 +19,13 @@ class DrawingViewController: UIViewController {
         navigationController?.hidesBarsOnTap = true
         navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: "toggleNavBar:")
         navigationController?.setNavigationBarHidden(true, animated: false)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentDrawing:", name: "suspending", object: nil)
+        
+        let path = FilePathInDocumentsDirectory("pointsFromClose.archive")
+        if let layers = NSKeyedUnarchiver.unarchiveObjectWithFile(path) {
+            drawingView.layers = layers as! [Layer]
+            print("Layers=\(drawingView.layers)")
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -37,23 +45,41 @@ class DrawingViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func saveCurrentDrawing (notification: NSNotification) {
+        let path = FilePathInDocumentsDirectory("pointsFromClose.archive")
+        let success = NSKeyedArchiver.archiveRootObject(drawingView.layers, toFile: path)
+        print("Saved \(success) to \(path)")
+    }
+    
     func toggleNavBar (tap: UITapGestureRecognizer) {
         prefersStatusBarHidden()
     }
     
     func promptClear() {
+        let alertVC = UIAlertController(title: "Delete Drawing", message: "Delete your beautiful drawing?", preferredStyle: .Alert)
+        let authStatus = PHPhotoLibrary.authorizationStatus()
+        if authStatus != PHAuthorizationStatus.Denied {
+            let saveAndDeleteAction = UIAlertAction(title: "Save and Delete", style: .Default) { (_) in
+                let image = self.drawingView.createImageFromContext()
+                if authStatus == PHAuthorizationStatus.Authorized {
+                    UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+                    self.drawingView.clear()
+                } else if authStatus == PHAuthorizationStatus.NotDetermined {
+                    PHPhotoLibrary.requestAuthorization({ (status) -> Void in
+                        if status == PHAuthorizationStatus.Authorized {
+                            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+                            self.drawingView.clear()
+                        }
+                    })
+                }
+            }
+            alertVC.addAction(saveAndDeleteAction)
+        }
         let deleteWithoutSavingAction = UIAlertAction(title: "Delete Without Saving", style: .Destructive) { (_) in
             self.drawingView.clear()
         }
-        let saveAndDeleteAction = UIAlertAction(title: "Save and Delete", style: .Default) { (_) in
-            let image = self.drawingView.createImageFromContext()
-            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-            self.drawingView.clear()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
-        let alertVC = UIAlertController(title: "Delete Drawing", message: "Delete your beautiful drawing?", preferredStyle: .Alert)
-        alertVC.addAction(saveAndDeleteAction)
         alertVC.addAction(deleteWithoutSavingAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
         alertVC.addAction(cancelAction)
         presentViewController(alertVC, animated: true) { () in }
     }
@@ -64,18 +90,20 @@ class DrawingViewController: UIViewController {
         }
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        if (size.width > size.height)
-        {
-            // Position elements for Landscape
-            drawingView.transpose(.Landscape)
-        }
-        else
-        {
-            // Position elements for Portrait
-            drawingView.transpose(.Portrait)
-        }
-    }
+//    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+//        if (size.width > size.height)
+//        {
+//            // Position elements for Landscape
+//            drawingView.transpose(.Landscape)
+//            drawingView.setNeedsDisplay()
+//        }
+//        else
+//        {
+//            // Position elements for Portrait
+//            drawingView.transpose(.Portrait)
+//            drawingView.setNeedsDisplay()
+//        }
+//    }
     
     @IBAction func undo(sender: AnyObject) {
         self.drawingView.undoStroke()
@@ -87,7 +115,7 @@ class DrawingViewController: UIViewController {
     
     @IBAction func shareDrawing(sender: AnyObject) {
         let image = drawingView.createImageFromContext()
-        let messageText = "woah"
+        let messageText = ""
         let activityVC = UIActivityViewController(activityItems: [messageText, image!], applicationActivities: nil)
         presentViewController(activityVC, animated: true) { () in }
     }
@@ -103,9 +131,7 @@ class DrawingViewController: UIViewController {
         if let optionsVC = segue.sourceViewController as? OptionsViewController {
             drawingView.options = optionsVC.options
             drawingView.backgroundColor = DrawingOptions.backgroundColor
-            if optionsVC.didSetBackground {
-                DrawingOptions.selectedLayer = 0
-            }
+            DrawingOptions.didSetBackground = false
         }
     }
 }

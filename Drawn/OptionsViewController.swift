@@ -16,7 +16,6 @@ class OptionsViewController: UIViewController {
     @IBOutlet weak var lineWidthDescriptionLabel: UILabel!
     
     lazy var options : DrawingOptions = DrawingOptions()
-    var didSetBackground : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,9 +49,8 @@ class OptionsViewController: UIViewController {
             Int(green * 255.0),
             Int(blue * 255.0),
             Int(alpha * 255.0))
-        if DrawingOptions.selectedLayer == 3 {
+        if DrawingOptions.didSetBackground {
             DrawingOptions.backgroundColor = color
-            didSetBackground = true
         } else {
             options.color = color
         }

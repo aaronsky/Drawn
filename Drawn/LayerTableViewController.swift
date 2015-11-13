@@ -14,7 +14,7 @@ class LayerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: DrawingOptions.selectedLayer, inSection: 0))
+        let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: DrawingOptions.selectedLayer.rawValue, inSection: 0))
         cell?.accessoryType = .Checkmark
     }
     
@@ -24,11 +24,11 @@ class LayerTableViewController: UITableViewController {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         if let cellName = cell?.reuseIdentifier {
             switch cellName {
-            case "Layer0Cell": DrawingOptions.selectedLayer = 0; break
-            case "Layer1Cell": DrawingOptions.selectedLayer = 1; break
-            case "Layer2Cell": DrawingOptions.selectedLayer = 2; break
-            case "BackgroundCell": DrawingOptions.selectedLayer = 3; break
-            default: DrawingOptions.selectedLayer = 0; break
+            case "Layer0Cell": DrawingOptions.selectedLayer = LayerEnum.Zero; break
+            case "Layer1Cell": DrawingOptions.selectedLayer = LayerEnum.One; break
+            case "Layer2Cell": DrawingOptions.selectedLayer = LayerEnum.Two; break
+            case "BackgroundCell": DrawingOptions.didSetBackground = true; break
+            default: DrawingOptions.selectedLayer = LayerEnum.Zero; break
             }
         }
         cell?.accessoryType = .Checkmark

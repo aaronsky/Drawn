@@ -11,26 +11,22 @@ import UIKit
 class DrawingView: UIView {
     
     var layers : [Layer] = [Layer(), Layer(), Layer()]
-    lazy var history : [Int] = [Int]()
+    lazy var history : [LayerEnum] = [LayerEnum]()
     var options : DrawingOptions = DrawingOptions()
     
     //MARK: Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         initialize()
-        print("init")
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initialize()
-        print("init")
     }
     
     private func initialize() {
         backgroundColor = DrawingOptions.backgroundColor
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "undoStroke:", name: "undoStroke", object: nil)
     }
     
     //MARK: DrawingView functions
@@ -45,7 +41,7 @@ class DrawingView: UIView {
     
     func clear () {
         print("clear the screen")
-        DrawingOptions.selectedLayer = 0
+        DrawingOptions.selectedLayer = LayerEnum.Zero
         history.removeAll()
         for layer in layers {
             layer.clear()
@@ -55,7 +51,7 @@ class DrawingView: UIView {
     
     func undoStroke () {
         if let layerIndex = history.last {
-            if let _ = layers[layerIndex].popLast() {
+            if let _ = layers[layerIndex.rawValue].popLast() {
                 history.removeLast()
                 setNeedsDisplay()
             }
@@ -96,20 +92,20 @@ class DrawingView: UIView {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
             let point = touch.locationInView(self)
-            layers[DrawingOptions.selectedLayer].strokeTo(point, withOptions: options)
+            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withOptions: options)
         }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
             let point = touch.locationInView(self)
-            layers[DrawingOptions.selectedLayer].strokeTo(point, withOptions: options)
+            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withOptions: options)
             setNeedsDisplay()
         }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        layers[DrawingOptions.selectedLayer].finishStroke()
+        layers[DrawingOptions.selectedLayer.rawValue].finishStroke()
         history.append(DrawingOptions.selectedLayer)
         setNeedsDisplay()
     }

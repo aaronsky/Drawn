@@ -8,9 +8,25 @@
 
 import UIKit
 
-class Layer {
+class Layer : NSObject, NSCoding {
     lazy var strokes : [Stroke] = [Stroke]()
     var strokeIndex : Int = 0
+    
+    override init() {
+        print("Layer - \(__FUNCTION__) called")
+        super.init()
+    }
+    
+    required internal init?(coder aDecoder: NSCoder) {
+        print("Layer - \(__FUNCTION__) called")
+        super.init()
+        strokes = aDecoder.decodeObjectForKey("strokes") as! [Stroke]
+        strokeIndex = strokes.count
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(strokes, forKey: "strokes")
+    }
     
     func clear() {
         for stroke in strokes {
@@ -18,14 +34,13 @@ class Layer {
         }
     }
     
-    func strokeTo(point: CGPoint, withForce force: CGFloat = 1.0, withOptions options: DrawingOptions = DrawingOptions()) {
+    func strokeTo(point: CGPoint, withOptions options: DrawingOptions) {
         if strokeIndex >= strokes.count {
-            strokes.append(Stroke())
+            let stroke = Stroke(point: point, withOptions: options.copy() as! DrawingOptions)
+            strokes.append(stroke)
+        } else {
+            strokes[strokeIndex].strokeTo(point, withOptions: options.copy() as! DrawingOptions)
         }
-        
-        strokes[strokeIndex].options = options
-        strokes[strokeIndex].options.lineWidth *= force
-        strokes[strokeIndex].strokeTo(point)
     }
     
     func finishStroke() {
