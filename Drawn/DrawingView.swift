@@ -62,6 +62,16 @@ class DrawingView: UIView {
         }
     }
     
+    func transpose(orientation: Orientation) {
+        for layer in layers {
+            if orientation == .Portrait {
+                layer.transposePortrait()
+            } else if orientation == .Landscape {
+                layer.transposeLandscape()                
+            }
+        }
+    }
+    
     //MARK: UIView overrides
     override func drawRect(rect: CGRect) {
         let ctx = UIGraphicsGetCurrentContext()

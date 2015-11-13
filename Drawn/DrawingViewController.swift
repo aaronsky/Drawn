@@ -64,6 +64,19 @@ class DrawingViewController: UIViewController {
         }
     }
     
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        if (size.width > size.height)
+        {
+            // Position elements for Landscape
+            drawingView.transpose(.Landscape)
+        }
+        else
+        {
+            // Position elements for Portrait
+            drawingView.transpose(.Portrait)
+        }
+    }
+    
     @IBAction func undo(sender: AnyObject) {
         self.drawingView.undoStroke()
     }

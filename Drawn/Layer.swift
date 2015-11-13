@@ -39,4 +39,12 @@ class Layer {
         }
         return nil
     }
+    
+    func transposePortrait() {
+        
+    }
+    
+    func transposeLandscape() {
+        
+    }
 }
