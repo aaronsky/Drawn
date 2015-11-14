@@ -53,7 +53,9 @@ enum LayerEnum: Int {
     }
     
     static func initWithCoder(aDecoder: NSCoder) {
-        LayerEnum.allDescriptions = aDecoder.decodeObjectForKey("layer.descriptions") as! [String]
+        if let descriptions = aDecoder.decodeObjectForKey("layer.descriptions") {
+            LayerEnum.allDescriptions = descriptions as! [String]
+        }
     }
     
     static func encodeWithCoder(aCoder: NSCoder) {
