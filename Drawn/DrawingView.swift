@@ -40,11 +40,13 @@ class DrawingView: UIView {
         return image
     }
     
-    func clear () {
+    func clear (clearImage flag: Bool = true) {
         print("clear the screen")
         LayerEnum.resetDescriptions()
         backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        backgroundImage = nil
+        if flag {
+            backgroundImage = nil
+        }
         DrawingOptions.selectedLayer = LayerEnum.Zero
         history.removeAll()
         for layer in layers {

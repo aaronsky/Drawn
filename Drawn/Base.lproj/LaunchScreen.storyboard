@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,19 +19,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="UfF-vG-UYY">
-                                <rect key="frame" x="175" y="231" width="250" height="137"/>
+                                <rect key="frame" x="110" y="195.5" width="380" height="208"/>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="250" id="YFF-z6-T91"/>
+                                    <constraint firstAttribute="width" secondItem="UfF-vG-UYY" secondAttribute="height" multiplier="250:137" id="qaE-4K-oum"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="F5A-uB-85u"/>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Jdj-dX-VIR"/>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="211" id="dte-B8-Fie"/>
+                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="1Q0-Bx-2SL"/>
+                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Vep-ve-3Hb"/>
                         </constraints>
                     </view>
                 </viewController>

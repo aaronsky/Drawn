@@ -27,7 +27,7 @@ class Stroke : NSObject, NSCoding {
         print("Stroke - \(__FUNCTION__) called")
         super.init()
         let count = aDecoder.decodeIntegerForKey("points.count")
-        for var i in 0 ..< count {
+        for i in 0 ..< count {
             let point = aDecoder.decodeCGPointForKey("points[\(i)]")
             points.append(point)
         }
@@ -36,7 +36,7 @@ class Stroke : NSObject, NSCoding {
     
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeInteger(points.count, forKey: "points.count")
-        for var i in 0 ..< points.count {
+        for i in 0 ..< points.count {
             aCoder.encodeCGPoint(points[i], forKey: "points[\(i)]")
         }
         aCoder.encodeObject(options, forKey: "options")

@@ -10,6 +10,9 @@ import UIKit
 
 extension UINavigationController {
     public override func shouldAutorotate() -> Bool {
-        return (visibleViewController?.shouldAutorotate())!
+        if visibleViewController is DrawingViewController || visibleViewController is OptionsViewController {
+            return (visibleViewController?.shouldAutorotate())!
+        }
+        return true
     }
 }

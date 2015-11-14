@@ -11,7 +11,7 @@ import UIKit
 import iAd
 
 class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     //MARK: IBOutlets
     @IBOutlet weak var adBannerView: ADBannerView!
     @IBOutlet weak var colorView: UIView!
@@ -28,7 +28,7 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
     //MARK: UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateColor:", name: "updateColor", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showImagePicker:", name: "loadBackgroundImage", object: nil)
@@ -39,7 +39,7 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
         
         adBannerView.delegate = self
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -98,12 +98,14 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
     }
     
     func showImagePicker (notification: NSNotification?) {
-        let pickerVC = UIImagePickerController()
-        pickerVC.sourceType = .PhotoLibrary
-        pickerVC.delegate = self
-        presentViewController(pickerVC, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            let pickerVC = UIImagePickerController()
+            pickerVC.sourceType = .PhotoLibrary
+            pickerVC.delegate = self
+            presentViewController(pickerVC, animated: true, completion: nil)
+        }
     }
-
+    
     //MARK: ADBannerViewDelegate methods
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         if isBannerVisible {

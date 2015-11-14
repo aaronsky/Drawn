@@ -62,7 +62,7 @@ class DrawingViewController: UIViewController {
         prefersStatusBarHidden()
     }
     
-    func promptClear() {
+    func promptSaveBeforeClear() {
         let alertVC = UIAlertController(title: "Delete Drawing", message: "Delete your beautiful drawing?", preferredStyle: .Alert)
         let authStatus = PHPhotoLibrary.authorizationStatus()
         if authStatus != PHAuthorizationStatus.Denied {
@@ -70,12 +70,12 @@ class DrawingViewController: UIViewController {
                 let image = self.drawingView.createImageFromContext()
                 if authStatus == PHAuthorizationStatus.Authorized {
                     UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-                    self.drawingView.clear()
+                    self.promptPreserveBackgroundImageForClear()
                 } else if authStatus == PHAuthorizationStatus.NotDetermined {
                     PHPhotoLibrary.requestAuthorization({ (status) -> Void in
                         if status == PHAuthorizationStatus.Authorized {
                             UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-                            self.drawingView.clear()
+                            self.promptPreserveBackgroundImageForClear()
                         }
                     })
                 }
@@ -83,7 +83,7 @@ class DrawingViewController: UIViewController {
             alertVC.addAction(saveAndDeleteAction)
         }
         let deleteWithoutSavingAction = UIAlertAction(title: "Delete Without Saving", style: .Destructive) { (_) in
-            self.drawingView.clear()
+            self.promptPreserveBackgroundImageForClear()
         }
         alertVC.addAction(deleteWithoutSavingAction)
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
@@ -91,9 +91,24 @@ class DrawingViewController: UIViewController {
         presentViewController(alertVC, animated: true, completion: nil)
     }
     
+    func promptPreserveBackgroundImageForClear() {
+        if self.drawingView.backgroundImage != nil {
+            let alertVC = UIAlertController(title: "A background image exists", message: "You have a background image set. Do you want to get rid of it?", preferredStyle: .Alert)
+            alertVC.addAction(UIAlertAction(title: "Yes, destroy it", style: .Destructive, handler: { (action) -> Void in
+                self.drawingView.clear()
+            }))
+            alertVC.addAction(UIAlertAction(title: "No, keep it", style: .Default, handler: { (action) -> Void in
+                self.drawingView.clear(clearImage: false)
+            }))
+            presentViewController(alertVC, animated: true, completion: nil)
+        } else {
+            self.drawingView.clear()
+        }
+    }
+    
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
         if motion == .MotionShake {
-            promptClear()
+            promptSaveBeforeClear()
         }
     }
     
@@ -102,14 +117,18 @@ class DrawingViewController: UIViewController {
     }
     
     @IBAction func clearDrawing(sender: AnyObject) {
-        promptClear()
+        promptSaveBeforeClear()
     }
     
     @IBAction func shareDrawing(sender: AnyObject) {
         let image = drawingView.createImageFromContext()
         let messageText = ""
         let activityVC = UIActivityViewController(activityItems: [messageText, image!], applicationActivities: nil)
-        presentViewController(activityVC, animated: true) { () in }
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            activityVC.modalPresentationStyle = .Popover
+            activityVC.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
+        }
+        presentViewController(activityVC, animated: true, completion: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

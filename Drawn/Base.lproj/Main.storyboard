@@ -51,7 +51,9 @@
                         <rightBarButtonItems>
                             <barButtonItem title="Options" id="aR9-4T-od2">
                                 <connections>
-                                    <segue destination="dyH-ll-by5" kind="presentation" identifier="ColorWheelSegue" id="XDp-zD-nWZ"/>
+                                    <segue destination="dyH-ll-by5" kind="popoverPresentation" identifier="ColorWheelSegue" popoverAnchorBarButtonItem="aR9-4T-od2" id="XDp-zD-nWZ">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem systemItem="action" id="8la-Uf-P6c">
