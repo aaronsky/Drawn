@@ -22,10 +22,23 @@ class Layer : NSObject, NSCoding {
         super.init()
         strokes = aDecoder.decodeObjectForKey("strokes") as! [Stroke]
         strokeIndex = strokes.count
+        LayerEnum.initWithCoder(aDecoder)
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(strokes, forKey: "strokes")
+        LayerEnum.encodeWithCoder(aCoder)
+    }
+    
+    func empty() -> Bool {
+        if strokes.count > 0 {
+            for stroke in strokes {
+                if stroke.points.count > 0 {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     func clear() {
@@ -53,13 +66,5 @@ class Layer : NSObject, NSCoding {
             return stroke
         }
         return nil
-    }
-    
-    func transposePortrait() {
-        
-    }
-    
-    func transposeLandscape() {
-        
     }
 }

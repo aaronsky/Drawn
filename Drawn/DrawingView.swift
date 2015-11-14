@@ -13,6 +13,7 @@ class DrawingView: UIView {
     var layers : [Layer] = [Layer(), Layer(), Layer()]
     lazy var history : [LayerEnum] = [LayerEnum]()
     var options : DrawingOptions = DrawingOptions()
+    var backgroundImage : UIImage?
     
     //MARK: Initialization
     override init(frame: CGRect) {
@@ -41,6 +42,9 @@ class DrawingView: UIView {
     
     func clear () {
         print("clear the screen")
+        LayerEnum.resetDescriptions()
+        backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        backgroundImage = nil
         DrawingOptions.selectedLayer = LayerEnum.Zero
         history.removeAll()
         for layer in layers {
@@ -58,33 +62,39 @@ class DrawingView: UIView {
         }
     }
     
-    func transpose(orientation: Orientation) {
+    func hasStartedDrawing() -> Bool {
         for layer in layers {
-            if orientation == .Portrait {
-                layer.transposePortrait()
-            } else if orientation == .Landscape {
-                layer.transposeLandscape()                
+            if layer.empty() {
+                return true
             }
         }
+        return false
     }
     
     //MARK: UIView overrides
     override func drawRect(rect: CGRect) {
         let ctx = UIGraphicsGetCurrentContext()
+        if let image = backgroundImage {
+            CGContextSaveGState(ctx);
+            CGContextTranslateCTM(ctx, 0.0, frame.height)
+            CGContextScaleCTM(ctx, 1.0, -1.0)
+            CGContextDrawImage(ctx, frame, image.CGImage)
+            CGContextRestoreGState(ctx)
+        }
+        CGContextSetLineJoin(ctx, .Round)
+        CGContextSetLineCap(ctx, .Round)
         for layer in layers {
             for stroke in layer.strokes {
                 CGContextSetStrokeColor(ctx, CGColorGetComponents(stroke.options.color.CGColor))
                 CGContextSetLineWidth(ctx, stroke.options.lineWidth)
-                CGContextSetLineJoin(ctx, .Round)
-                CGContextSetLineCap(ctx, .Round)
                 
                 for var i = 0; i < stroke.points.count - 1; i++ {
                     let point1 = stroke.points[i]
                     let point2 = stroke.points[i+1]
                     CGContextMoveToPoint(ctx, point1.x, point1.y);
                     CGContextAddLineToPoint(ctx, point2.x, point2.y)
-                    CGContextStrokePath(ctx)
                 }
+                CGContextStrokePath(ctx)
             }
         }
     }

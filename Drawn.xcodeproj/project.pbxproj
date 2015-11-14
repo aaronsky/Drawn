@@ -18,6 +18,8 @@
 		F52B74F31BEF0660009612F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F21BEF0660009612F8 /* Assets.xcassets */; };
 		F52B74F61BEF0660009612F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */; };
 		F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74FD1BEF06E3009612F8 /* DrawingView.swift */; };
+		F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */; };
+		F58206191BF6425100C1E491 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58206181BF6425100C1E491 /* iAd.framework */; };
 		F58F68321BF5098100F59996 /* LayerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F58F68311BF5098100F59996 /* LayerTableViewController.swift */; };
 		F590C58F1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */; };
 		F590C5911BF58F8C00E4D2B1 /* LayerEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = F590C5901BF58F8C00E4D2B1 /* LayerEnum.swift */; };
@@ -38,6 +40,8 @@
 		F52B74F51BEF0660009612F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F52B74F71BEF0660009612F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F52B74FD1BEF06E3009612F8 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtensions.swift; sourceTree = "<group>"; };
+		F58206181BF6425100C1E491 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		F58F68311BF5098100F59996 /* LayerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerTableViewController.swift; sourceTree = "<group>"; };
 		F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelperFunctions.swift; sourceTree = "<group>"; };
 		F590C5901BF58F8C00E4D2B1 /* LayerEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerEnum.swift; sourceTree = "<group>"; };
@@ -49,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F58206191BF6425100C1E491 /* iAd.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,6 +111,7 @@
 		F52B74DF1BEF0660009612F8 = {
 			isa = PBXGroup;
 			children = (
+				F58206181BF6425100C1E491 /* iAd.framework */,
 				F52B74EA1BEF0660009612F8 /* Drawn */,
 				F52B74E91BEF0660009612F8 /* Products */,
 			);
@@ -122,6 +128,7 @@
 		F52B74EA1BEF0660009612F8 /* Drawn */ = {
 			isa = PBXGroup;
 			children = (
+				F55FCFE41BF7672C00CC4D1D /* Extensions */,
 				F590C58D1BF57AEC00E4D2B1 /* Enums */,
 				F590C58C1BF57AE300E4D2B1 /* Helpers */,
 				F510160C1BEFC6420001A255 /* Models */,
@@ -131,6 +138,14 @@
 				F51016061BEFACE00001A255 /* Supporting Files */,
 			);
 			path = Drawn;
+			sourceTree = "<group>";
+		};
+		F55FCFE41BF7672C00CC4D1D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		F590C58C1BF57AE300E4D2B1 /* Helpers */ = {
@@ -223,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F590C5911BF58F8C00E4D2B1 /* LayerEnum.swift in Sources */,
+				F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */,
 				F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */,
 				F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */,
 				F52B74EE1BEF0660009612F8 /* DrawingViewController.swift in Sources */,

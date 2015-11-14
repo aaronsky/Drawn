@@ -40,6 +40,13 @@ class DrawingViewController: UIViewController {
         return (navigationController?.navigationBarHidden)!
     }
     
+    override func shouldAutorotate() -> Bool {
+        if drawingView != nil {
+            return !drawingView.hasStartedDrawing()
+        }
+        return true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -79,9 +86,9 @@ class DrawingViewController: UIViewController {
             self.drawingView.clear()
         }
         alertVC.addAction(deleteWithoutSavingAction)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alertVC.addAction(cancelAction)
-        presentViewController(alertVC, animated: true) { () in }
+        presentViewController(alertVC, animated: true, completion: nil)
     }
     
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
@@ -89,21 +96,6 @@ class DrawingViewController: UIViewController {
             promptClear()
         }
     }
-    
-//    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-//        if (size.width > size.height)
-//        {
-//            // Position elements for Landscape
-//            drawingView.transpose(.Landscape)
-//            drawingView.setNeedsDisplay()
-//        }
-//        else
-//        {
-//            // Position elements for Portrait
-//            drawingView.transpose(.Portrait)
-//            drawingView.setNeedsDisplay()
-//        }
-//    }
     
     @IBAction func undo(sender: AnyObject) {
         self.drawingView.undoStroke()
@@ -131,6 +123,10 @@ class DrawingViewController: UIViewController {
         if let optionsVC = segue.sourceViewController as? OptionsViewController {
             drawingView.options = optionsVC.options
             drawingView.backgroundColor = DrawingOptions.backgroundColor
+            if let image = optionsVC.selectedImage {
+                drawingView.backgroundImage = image
+                drawingView.setNeedsDisplay()
+            }
             DrawingOptions.didSetBackground = false
         }
     }

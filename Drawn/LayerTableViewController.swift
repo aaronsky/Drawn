@@ -9,17 +9,35 @@
 import UIKit
 
 class LayerTableViewController: UITableViewController {
-
+    
     //MARK: View lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: DrawingOptions.selectedLayer.rawValue, inSection: 0))
-        cell?.accessoryType = .Checkmark
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedImageFromPicker:", name: "selectedImageFromPicker", object: nil)
+        if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: DrawingOptions.selectedLayer.rawValue, inSection: 0)) {
+            cell.accessoryType = .Checkmark
+        }
+        let gesture = UITapGestureRecognizer(target: self, action: "editLayerName:")
+        gesture.numberOfTapsRequired = 2
+        tableView.addGestureRecognizer(gesture)
     }
     
+    //MARK: NSNotification
+    func selectedImageFromPicker(notification: NSNotification?) {
+        if let image: UIImage = notification?.userInfo!["image"] as? UIImage {
+            if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) {
+                cell.imageView?.image = image
+            }
+        }
+    }
     
     //MARK: UITableViewController overrides
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+        cell.textLabel?.text = LayerEnum.allValues[indexPath.row].description
+        return cell
+    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         if let cellName = cell?.reuseIdentifier {
@@ -27,7 +45,10 @@ class LayerTableViewController: UITableViewController {
             case "Layer0Cell": DrawingOptions.selectedLayer = LayerEnum.Zero; break
             case "Layer1Cell": DrawingOptions.selectedLayer = LayerEnum.One; break
             case "Layer2Cell": DrawingOptions.selectedLayer = LayerEnum.Two; break
-            case "BackgroundCell": DrawingOptions.didSetBackground = true; break
+            case "BackgroundCell":
+                DrawingOptions.didSetBackground = true;
+                NSNotificationCenter.defaultCenter().postNotificationName("disableAlphaControls", object: nil)
+                break
             default: DrawingOptions.selectedLayer = LayerEnum.Zero; break
             }
         }
@@ -36,11 +57,48 @@ class LayerTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
+        if cell?.reuseIdentifier == "BackgroundCell" {
+            NSNotificationCenter.defaultCenter().postNotificationName("enableAlphaControls", object: nil)
+        }
         cell?.accessoryType = .None
     }
     
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return false
+        return indexPath.row == 3
     }
     
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let chooseImageAction = UITableViewRowAction(style: .Default, title: "Choose Image") { (action, indexPath) in
+            NSNotificationCenter.defaultCenter().postNotificationName("loadBackgroundImage", object: nil)
+        }
+        return [chooseImageAction]
+    }
+    
+    //MARK: GestureRecognizer methods
+    func editLayerName(gesture: UIGestureRecognizer) {
+        if gesture.state == .Ended {
+            let point = gesture.locationInView(tableView)
+            if let indexPath = tableView.indexPathForRowAtPoint(point) {
+                if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+                    let title = cell.textLabel?.text ?? "this layer"
+                    var textField: UITextField?
+                    let alertVC = UIAlertController(title: "Edit name", message: "Enter a new name for \(title)", preferredStyle: .Alert)
+                    alertVC.addTextFieldWithConfigurationHandler({ (field) in
+                        field.placeholder = "Layer name"
+                        textField = field
+                    })
+                    alertVC.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+                    alertVC.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) in
+                        textField?.resignFirstResponder()
+                        let name = textField?.text
+                        cell.textLabel?.text = name
+                        if var layer = LayerEnum(rawValue: indexPath.row) {
+                            layer.description = name!
+                        }
+                    }))
+                    presentViewController(alertVC, animated: true, completion: nil)
+                }
+            }
+        }
+    }
 }

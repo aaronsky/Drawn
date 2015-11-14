@@ -31,6 +31,8 @@ class ColorPickerViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enableAlphaControls:", name: "enableAlphaControls", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "disableAlphaControls:", name: "disableAlphaControls", object: nil)
         resetUIForColorMode(.Rgb)
     }
     
@@ -84,6 +86,18 @@ class ColorPickerViewController: UIViewController {
             alphaSlider.value = Float(alpha)
         }
         notify()
+    }
+    
+    func enableAlphaControls (notification: NSNotification?) {
+        alphaSlider.hidden = false
+        alphaSlider.enabled = true
+        alphaSlider.userInteractionEnabled = true
+    }
+    
+    func disableAlphaControls (notification: NSNotification?) {
+        alphaSlider.userInteractionEnabled = false
+        alphaSlider.enabled = false
+        alphaSlider.hidden = true
     }
     
     func notify() {
