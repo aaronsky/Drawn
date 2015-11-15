@@ -87,15 +87,16 @@ class DrawingView: UIView {
         CGContextSetLineCap(ctx, .Round)
         for layer in layers {
             for stroke in layer.strokes {
-                CGContextSetStrokeColor(ctx, CGColorGetComponents(stroke.options.color.CGColor))
+                CGContextSetStrokeColorWithColor(ctx, stroke.options.color.CGColor)
                 CGContextSetLineWidth(ctx, stroke.options.lineWidth)
-                
+                let path: CGMutablePathRef = CGPathCreateMutable()
                 for var i = 0; i < stroke.points.count - 1; i++ {
                     let point1 = stroke.points[i]
                     let point2 = stroke.points[i+1]
-                    CGContextMoveToPoint(ctx, point1.x, point1.y);
-                    CGContextAddLineToPoint(ctx, point2.x, point2.y)
+                    CGPathMoveToPoint(path, nil, point1.x, point1.y)
+                    CGPathAddLineToPoint(path, nil, point2.x, point2.y)
                 }
+                CGContextAddPath(ctx, path)
                 CGContextStrokePath(ctx)
             }
         }

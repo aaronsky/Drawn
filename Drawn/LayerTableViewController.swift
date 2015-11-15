@@ -32,7 +32,15 @@ class LayerTableViewController: UITableViewController {
     //MARK: UITableViewController overrides
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
-        cell.textLabel?.text = LayerEnum.allValues[indexPath.row].description
+        if let cellName = cell.reuseIdentifier {
+            switch cellName {
+            case "Layer0Cell": cell.textLabel?.text = LayerEnum.Zero.description; break
+            case "Layer1Cell": cell.textLabel?.text = LayerEnum.One.description; break
+            case "Layer2Cell": cell.textLabel?.text = LayerEnum.Two.description; break
+            case "BackgroundCell": cell.textLabel?.text = LayerEnum.Background.description; break
+            default: break
+            }
+        }
         return cell
     }
     

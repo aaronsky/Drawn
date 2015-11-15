@@ -14,6 +14,7 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
     
     //MARK: IBOutlets
     @IBOutlet weak var adBannerView: ADBannerView!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var colorView: UIView!
     @IBOutlet weak var opacityLayerView: UIImageView!
     @IBOutlet weak var colorLabel: UILabel!
@@ -113,6 +114,7 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
                 self.view.addSubview(adBannerView)
             }
             UIView.beginAnimations("animateAdBannerOn", context: nil)
+            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: view.frame.height - adBannerView.frame.height)
             adBannerView.frame = CGRectOffset(adBannerView.frame, 0, -adBannerView.frame.height)
             UIView.commitAnimations()
             isBannerVisible = true
@@ -124,6 +126,7 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
         if isBannerVisible {
             UIView.beginAnimations("animateAdBannerOff", context: nil)
             adBannerView.frame = CGRectOffset(adBannerView.frame, 0, adBannerView.frame.height)
+            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: view.frame.height)
             UIView.commitAnimations()
             isBannerVisible = false
         }

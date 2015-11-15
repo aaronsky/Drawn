@@ -23,11 +23,15 @@ class Layer : NSObject, NSCoding {
         strokes = aDecoder.decodeObjectForKey("strokes") as! [Stroke]
         strokeIndex = strokes.count
         LayerEnum.initWithCoder(aDecoder)
+        if let color = aDecoder.decodeObjectForKey("backgroundColor") as? UIColor {
+            DrawingOptions.backgroundColor = color
+        }
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(strokes, forKey: "strokes")
         LayerEnum.encodeWithCoder(aCoder)
+        aCoder.encodeObject(DrawingOptions.backgroundColor, forKey: "backgroundColor")
     }
     
     func empty() -> Bool {
