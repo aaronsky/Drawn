@@ -20,6 +20,7 @@
 		F52B74F61BEF0660009612F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */; };
 		F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74FD1BEF06E3009612F8 /* DrawingView.swift */; };
 		F54BFA2D1BF788C70088BCF1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54BFA2C1BF788C70088BCF1 /* GoogleService-Info.plist */; };
+		F54BFA311BF7A3880088BCF1 /* GAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54BFA301BF7A3880088BCF1 /* GAHelper.swift */; };
 		F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */; };
 		F55FCFE81BF76DA000CC4D1D /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE71BF76DA000CC4D1D /* UIViewControllerExtensions.swift */; };
 		F58206191BF6425100C1E491 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58206181BF6425100C1E491 /* iAd.framework */; };
@@ -48,6 +49,7 @@
 		F52B74FD1BEF06E3009612F8 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		F54BFA2C1BF788C70088BCF1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F54BFA2F1BF789B40088BCF1 /* Drawn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Drawn-Bridging-Header.h"; sourceTree = "<group>"; };
+		F54BFA301BF7A3880088BCF1 /* GAHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAHelper.swift; sourceTree = "<group>"; };
 		F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtensions.swift; sourceTree = "<group>"; };
 		F55FCFE71BF76DA000CC4D1D /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		F58206181BF6425100C1E491 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
@@ -82,6 +84,7 @@
 		CE315080E2EEE3A829BEA530 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F58206181BF6425100C1E491 /* iAd.framework */,
 				15EE9D6D1425EB124968F2B2 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -140,7 +143,6 @@
 		F52B74DF1BEF0660009612F8 = {
 			isa = PBXGroup;
 			children = (
-				F58206181BF6425100C1E491 /* iAd.framework */,
 				F52B74EA1BEF0660009612F8 /* Drawn */,
 				F52B74E91BEF0660009612F8 /* Products */,
 				1AC569520CF9B245AA4D12B3 /* Pods */,
@@ -184,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */,
+				F54BFA301BF7A3880088BCF1 /* GAHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */,
 				F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */,
 				F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */,
+				F54BFA311BF7A3880088BCF1 /* GAHelper.swift in Sources */,
 				F52B74EE1BEF0660009612F8 /* DrawingViewController.swift in Sources */,
 				F51631351BF112A2005D997B /* Layer.swift in Sources */,
 				F510160E1BEFC64E0001A255 /* DrawingOptions.swift in Sources */,
@@ -449,6 +453,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Drawn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skyapps.Drawn;
@@ -463,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Drawn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.skyapps.Drawn;

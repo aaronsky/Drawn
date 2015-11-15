@@ -124,6 +124,16 @@ class DrawingViewController: UIViewController {
         let image = drawingView.createImageFromContext()
         let messageText = ""
         let activityVC = UIActivityViewController(activityItems: [messageText, image!], applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, activityError) in
+            if activityError != nil {
+                print("failure")
+                return
+            }
+            if completed && activityType != nil {
+                //GAHelper.instance.buildReport()
+                //GAHelper.instance.report("social", withAction: activityType!, withLabel: activityType!, andValue: 0)
+            }
+        }
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             activityVC.modalPresentationStyle = .Popover
             activityVC.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
