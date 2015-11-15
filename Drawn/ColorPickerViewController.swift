@@ -92,12 +92,14 @@ class ColorPickerViewController: UIViewController {
         alphaSlider.hidden = false
         alphaSlider.enabled = true
         alphaSlider.userInteractionEnabled = true
+        NSNotificationCenter.defaultCenter().postNotificationName("updateColor", object: self, userInfo: ["color":selectedColor])
     }
     
     func disableAlphaControls (notification: NSNotification?) {
         alphaSlider.userInteractionEnabled = false
         alphaSlider.enabled = false
         alphaSlider.hidden = true
+        NSNotificationCenter.defaultCenter().postNotificationName("updateColor", object: self, userInfo: ["color":selectedColor])
     }
     
     func notify() {

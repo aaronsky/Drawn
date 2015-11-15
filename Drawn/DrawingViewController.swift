@@ -130,8 +130,7 @@ class DrawingViewController: UIViewController {
                 return
             }
             if completed && activityType != nil {
-                //GAHelper.instance.buildReport()
-                //GAHelper.instance.report("social", withAction: activityType!, withLabel: activityType!, andValue: 0)
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("social", action: activityType!, label: activityType!, value: 0).build() as [NSObject: AnyObject])
             }
         }
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
