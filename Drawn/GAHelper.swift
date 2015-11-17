@@ -54,6 +54,9 @@ class GAHelper {
     }
     
     static var trackerInstance: GAITracker? {
+        if tracker == nil {
+            GAHelper.setup()
+        }
         return tracker
     }
     

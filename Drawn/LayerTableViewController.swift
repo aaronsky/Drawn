@@ -10,6 +10,8 @@ import UIKit
 
 class LayerTableViewController: UITableViewController {
     
+    var image : UIImage?
+    
     //MARK: View lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +23,7 @@ class LayerTableViewController: UITableViewController {
     
     //MARK: NSNotification
     func selectedImageFromPicker(notification: NSNotification?) {
+        GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("image", action: "Set BG", label: "Set image as backdrop", value: 0).build() as [NSObject: AnyObject])
         if let image: UIImage = notification?.userInfo!["image"] as? UIImage {
             if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) {
                 cell.imageView?.image = image
@@ -37,7 +40,10 @@ class LayerTableViewController: UITableViewController {
             case "Layer0Cell": cell.textLabel?.text = LayerEnum.Zero.description; break
             case "Layer1Cell": cell.textLabel?.text = LayerEnum.One.description; break
             case "Layer2Cell": cell.textLabel?.text = LayerEnum.Two.description; break
-            case "BackgroundCell": cell.textLabel?.text = LayerEnum.Background.description; break
+            case "BackgroundCell":
+                cell.textLabel?.text = LayerEnum.Background.description;
+                cell.imageView?.image = image
+                break
             default: break
             }
         }
@@ -48,12 +54,22 @@ class LayerTableViewController: UITableViewController {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
         if let cellName = cell?.reuseIdentifier {
             switch cellName {
-            case "Layer0Cell": DrawingOptions.selectedLayer = LayerEnum.Zero; break
-            case "Layer1Cell": DrawingOptions.selectedLayer = LayerEnum.One; break
-            case "Layer2Cell": DrawingOptions.selectedLayer = LayerEnum.Two; break
+            case "Layer0Cell":
+                DrawingOptions.selectedLayer = LayerEnum.Zero
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer", label: "Set layer to 0", value: LayerEnum.Zero.rawValue).build() as [NSObject: AnyObject])
+                break
+            case "Layer1Cell":
+                DrawingOptions.selectedLayer = LayerEnum.One
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer", label: "Set layer to 1", value: LayerEnum.One.rawValue).build() as [NSObject: AnyObject])
+                break
+            case "Layer2Cell":
+                DrawingOptions.selectedLayer = LayerEnum.Two
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer", label: "Set layer to 2", value: LayerEnum.Two.rawValue).build() as [NSObject: AnyObject])
+                break
             case "BackgroundCell":
                 DrawingOptions.didSetBackground = true;
                 NSNotificationCenter.defaultCenter().postNotificationName("disableAlphaControls", object: nil)
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer", label: "Set layer to BG", value: LayerEnum.Background.rawValue).build() as [NSObject: AnyObject])
                 break
             default: DrawingOptions.selectedLayer = LayerEnum.Zero; break
             }
@@ -110,6 +126,7 @@ class LayerTableViewController: UITableViewController {
                 if var layer = LayerEnum(rawValue: indexPath.row) {
                     layer.description = name!
                 }
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer Name", label: "Set layer name to \(name!)", value: 0).build() as [NSObject: AnyObject])
             }))
             presentViewController(alertVC, animated: true, completion: nil)
         }

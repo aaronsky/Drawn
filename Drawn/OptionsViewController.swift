@@ -23,7 +23,8 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
     
     //MARK: Members
     var isBannerVisible : Bool = false
-    lazy var options : DrawingOptions = DrawingOptions()
+    lazy var currentColor : UIColor = UIColor.whiteColor()
+    lazy var currentLineWidth : CGFloat = 3.0
     var selectedImage : UIImage?
     
     //MARK: UIViewController overrides
@@ -34,9 +35,9 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateColor:", name: "updateColor", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showImagePicker:", name: "loadBackgroundImage", object: nil)
         
-        setColor(options.color)
-        setLineWidth(options.lineWidth)
-        lineWidthSlider.value = Float(floor(options.lineWidth))
+        setColor(currentColor)
+        setLineWidth(currentLineWidth)
+        lineWidthSlider.value = Float(floor(currentLineWidth))
         
         adBannerView.delegate = self
     }
@@ -60,7 +61,10 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
         if segue.identifier == "EmbeddedColorPickerSegue" {
             //butts
             let vc = segue.destinationViewController as! ColorPickerViewController
-            vc.selectedColor = options.color
+            vc.selectedColor = currentColor
+        } else if segue.identifier == "EmbeddedLayerTableSegue" {
+            let vc = segue.destinationViewController as! LayerTableViewController
+            vc.image = selectedImage
         }
     }
     
@@ -78,13 +82,13 @@ class OptionsViewController: UIViewController, ADBannerViewDelegate, UIImagePick
         if DrawingOptions.didSetBackground {
             DrawingOptions.backgroundColor = color
         } else {
-            options.color = color
+            currentColor = color
         }
     }
     
     func setLineWidth (width: CGFloat) {
-        options.lineWidth = width
-        lineWidthDescriptionLabel.text = "Line Width: \(options.lineWidth)"
+        currentLineWidth = width
+        lineWidthDescriptionLabel.text = "Line Width: \(currentLineWidth)"
     }
     
     @IBAction func lineWidthSliderValueChanged(sender: UISlider) {

@@ -45,8 +45,10 @@ class ColorPickerViewController: UIViewController {
         let mode = ColorMode(rawValue: sender.selectedSegmentIndex)!
         switch mode {
         case .Rgb:
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("colormode", action: "rgb", label: "rgb", value: 0).build() as [NSObject: AnyObject])
             resetUIForColorMode(.Rgb)
         case .Hsv:
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("colormode", action: "hsv", label: "hsv", value: 0).build() as [NSObject: AnyObject])
             resetUIForColorMode(.Hsv)
         }
     }
@@ -123,15 +125,5 @@ class ColorPickerViewController: UIViewController {
     func scale(x:Float, minStart:Float, minEnd:Float, maxStart:Float, maxEnd:Float) -> Float {
         return ((x - minStart) / (minEnd - minStart)) * (maxEnd - maxStart) + maxStart
     }
-    
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
     
 }

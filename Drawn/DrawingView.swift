@@ -11,9 +11,10 @@ import UIKit
 class DrawingView: UIView {
     
     var layers : [Layer] = [Layer(), Layer(), Layer()]
-    lazy var history : [LayerEnum] = [LayerEnum]()
-    var options : DrawingOptions = DrawingOptions()
+    var currentColor : UIColor = UIColor.whiteColor()
+    var currentLineWidth : CGFloat = 3.0
     var backgroundImage : UIImage?
+    private lazy var history : [LayerEnum] = [LayerEnum]()
     
     //MARK: Initialization
     override init(frame: CGRect) {
@@ -66,7 +67,7 @@ class DrawingView: UIView {
     
     func hasStartedDrawing() -> Bool {
         for layer in layers {
-            if layer.empty() {
+            if layer.isEmpty {
                 return true
             }
         }
@@ -83,36 +84,29 @@ class DrawingView: UIView {
             CGContextDrawImage(ctx, frame, image.CGImage)
             CGContextRestoreGState(ctx)
         }
-        CGContextSetLineJoin(ctx, .Round)
-        CGContextSetLineCap(ctx, .Round)
         for layer in layers {
-            for stroke in layer.strokes {
-                CGContextSetStrokeColorWithColor(ctx, stroke.options.color.CGColor)
-                CGContextSetLineWidth(ctx, stroke.options.lineWidth)
-                let path: CGMutablePathRef = CGPathCreateMutable()
-                for var i = 0; i < stroke.points.count - 1; i++ {
-                    let point1 = stroke.points[i]
-                    let point2 = stroke.points[i+1]
-                    CGPathMoveToPoint(path, nil, point1.x, point1.y)
-                    CGPathAddLineToPoint(path, nil, point2.x, point2.y)
-                }
-                CGContextAddPath(ctx, path)
-                CGContextStrokePath(ctx)
-            }
-        }
+            let layerCG = layer.layer(ctx!, withFrame: frame)
+            CGContextDrawLayerInRect(ctx, frame, layerCG)
+        }        
+    }
+    
+    func drawLayers() {
+        //back
+        //front
+        //blit front onto back
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
             let point = touch.locationInView(self)
-            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withOptions: options)
+            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withColor: currentColor, withLineWidth: currentLineWidth)
         }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
             let point = touch.locationInView(self)
-            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withOptions: options)
+            layers[DrawingOptions.selectedLayer.rawValue].strokeTo(point, withColor: currentColor, withLineWidth: currentLineWidth)
             setNeedsDisplay()
         }
     }

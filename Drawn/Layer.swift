@@ -12,6 +12,18 @@ class Layer : NSObject, NSCoding {
     lazy var strokes : [Stroke] = [Stroke]()
     var strokeIndex : Int = 0
     
+    func layer(ctx: CGContextRef, withFrame frame: CGRect) -> CGLayerRef? {
+        let cLayer = CGLayerCreateWithContext(ctx, frame.size, nil)
+        let layerCtx = CGLayerGetContext(cLayer)
+        for stroke in strokes {
+            CGContextSetStrokeColorWithColor(layerCtx, stroke.color.CGColor)
+            CGContextSetLineWidth(layerCtx, stroke.path.lineWidth)
+            CGContextAddPath(layerCtx, stroke.path.CGPath)
+            CGContextStrokePath(layerCtx)
+        }
+        return cLayer!
+    }
+    
     override init() {
         print("Layer - \(__FUNCTION__) called")
         super.init()
@@ -20,8 +32,10 @@ class Layer : NSObject, NSCoding {
     required internal init?(coder aDecoder: NSCoder) {
         print("Layer - \(__FUNCTION__) called")
         super.init()
-        strokes = aDecoder.decodeObjectForKey("strokes") as! [Stroke]
-        strokeIndex = strokes.count
+        if let _strokes = aDecoder.decodeObjectForKey("strokes") as? [Stroke] {
+            strokes = _strokes
+            strokeIndex = strokes.count
+        }
         LayerEnum.initWithCoder(aDecoder)
         if let color = aDecoder.decodeObjectForKey("backgroundColor") as? UIColor {
             DrawingOptions.backgroundColor = color
@@ -34,29 +48,29 @@ class Layer : NSObject, NSCoding {
         aCoder.encodeObject(DrawingOptions.backgroundColor, forKey: "backgroundColor")
     }
     
-    func empty() -> Bool {
-        if strokes.count > 0 {
+    var isEmpty : Bool {
+        if strokes.isEmpty {
+            return false
+        } else {
             for stroke in strokes {
-                if stroke.points.count > 0 {
+                if stroke.path.empty {
                     return true
                 }
             }
+            return false
         }
-        return false
     }
     
     func clear() {
-        for stroke in strokes {
-            stroke.points.removeAll()
-        }
+        strokes.removeAll()
     }
     
-    func strokeTo(point: CGPoint, withOptions options: DrawingOptions) {
+    func strokeTo(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
         if strokeIndex >= strokes.count {
-            let stroke = Stroke(point: point, withOptions: options.copy() as! DrawingOptions)
+            let stroke = Stroke(point: point, withColor: color, withLineWidth: lineWidth)
             strokes.append(stroke)
         } else {
-            strokes[strokeIndex].strokeTo(point, withOptions: options.copy() as! DrawingOptions)
+            strokes[strokeIndex].strokeTo(point, withColor: color, withLineWidth: lineWidth)
         }
     }
     

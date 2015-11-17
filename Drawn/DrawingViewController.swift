@@ -67,6 +67,7 @@ class DrawingViewController: UIViewController {
         let authStatus = PHPhotoLibrary.authorizationStatus()
         if authStatus != PHAuthorizationStatus.Denied {
             let saveAndDeleteAction = UIAlertAction(title: "Save and Delete", style: .Default) { (_) in
+                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("Delete", action: "Saved", label: "Saved before deleting", value: 0).build() as [NSObject: AnyObject])
                 let image = self.drawingView.createImageFromContext()
                 if authStatus == PHAuthorizationStatus.Authorized {
                     UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
@@ -83,6 +84,7 @@ class DrawingViewController: UIViewController {
             alertVC.addAction(saveAndDeleteAction)
         }
         let deleteWithoutSavingAction = UIAlertAction(title: "Delete Without Saving", style: .Destructive) { (_) in
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("Delete", action: "No Save", label: "Did not save before deleting", value: 0).build() as [NSObject: AnyObject])
             self.promptPreserveBackgroundImageForClear()
         }
         alertVC.addAction(deleteWithoutSavingAction)
@@ -143,19 +145,26 @@ class DrawingViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "ColorWheelSegue" {
             let vc = segue.destinationViewController as! OptionsViewController
-            vc.options = drawingView.options
+            vc.currentColor = drawingView.currentColor
+            vc.currentLineWidth = drawingView.currentLineWidth
+            vc.selectedImage = drawingView.backgroundImage
         }
     }
     
     @IBAction func prepareForUnwind (segue: UIStoryboardSegue) {
         if let optionsVC = segue.sourceViewController as? OptionsViewController {
-            drawingView.options = optionsVC.options
-            drawingView.backgroundColor = DrawingOptions.backgroundColor
+            drawingView.currentColor = optionsVC.currentColor
+            drawingView.currentLineWidth = optionsVC.currentLineWidth
+            if DrawingOptions.didSetBackground {
+                drawingView.backgroundColor = DrawingOptions.backgroundColor
+                DrawingOptions.didSetBackground = false
+            }
             if let image = optionsVC.selectedImage {
                 drawingView.backgroundImage = image
                 drawingView.setNeedsDisplay()
             }
-            DrawingOptions.didSetBackground = false
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "color", label: optionsVC.currentColor.description, value: 0).build() as [NSObject: AnyObject])
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "lineWidth", label: "lineWidth", value: optionsVC.currentLineWidth).build() as [NSObject: AnyObject])
         }
     }
 }
