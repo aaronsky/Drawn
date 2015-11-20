@@ -10,7 +10,13 @@ import UIKit
 
 class Stroke : NSObject, NSCoding {
     lazy var path : UIBezierPath = UIBezierPath()
+    var pointCount : Int = 0
     lazy var color : UIColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    var isStrokeComplete : Bool = false
+    
+    var empty : Bool {
+        return path.empty || pointCount <= 1
+    }
     
     override init() {
         print("Stroke - \(__FUNCTION__) called")
@@ -22,9 +28,10 @@ class Stroke : NSObject, NSCoding {
     init(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
         print("Stroke - \(__FUNCTION__) called")
         super.init()
-        strokeTo(point, withColor: color, withLineWidth: lineWidth)
         path.lineCapStyle = .Round
         path.lineJoinStyle = .Round
+        path.moveToPoint(point)
+        pointCount++
     }
     
     required internal init?(coder aDecoder: NSCoder) {
@@ -32,24 +39,30 @@ class Stroke : NSObject, NSCoding {
         super.init()
         if let _path = aDecoder.decodeObjectForKey("path") as? UIBezierPath {
             path = _path
+            pointCount = path.elements.count + 1
         }
         if let _color = aDecoder.decodeObjectForKey("color") as? UIColor {
             color = _color
+        }
+        if let _complete = aDecoder.decodeObjectForKey("complete") as? Bool {
+            isStrokeComplete = _complete
         }
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(path, forKey: "path")
         aCoder.encodeObject(color, forKey: "color")
+        aCoder.encodeObject(isStrokeComplete, forKey: "complete")
+    }
+    
+    func strokeTo(point: CGPoint) {
+        path.addLineToPoint(point)
+        pointCount++
     }
     
     func strokeTo(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
         self.color = color
         path.lineWidth = lineWidth
-        if path.empty {
-            path.moveToPoint(point)
-        } else {
-            path.addLineToPoint(point)
-        }
+        strokeTo(point)
     }
 }

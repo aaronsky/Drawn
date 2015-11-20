@@ -9,32 +9,18 @@
 import UIKit
 
 class Layer : NSObject, NSCoding {
-    lazy var strokes : [Stroke] = [Stroke]()
-    var strokeIndex : Int = 0
-    
-    func layer(ctx: CGContextRef, withFrame frame: CGRect) -> CGLayerRef? {
-        let cLayer = CGLayerCreateWithContext(ctx, frame.size, nil)
-        let layerCtx = CGLayerGetContext(cLayer)
-        for stroke in strokes {
-            CGContextSetStrokeColorWithColor(layerCtx, stroke.color.CGColor)
-            CGContextSetLineWidth(layerCtx, stroke.path.lineWidth)
-            CGContextAddPath(layerCtx, stroke.path.CGPath)
-            CGContextStrokePath(layerCtx)
-        }
-        return cLayer!
-    }
+    var strokes : [Stroke] = [Stroke]()
     
     override init() {
         print("Layer - \(__FUNCTION__) called")
         super.init()
     }
     
-    required internal init?(coder aDecoder: NSCoder) {
+    convenience required init?(coder aDecoder: NSCoder) {
         print("Layer - \(__FUNCTION__) called")
-        super.init()
-        if let _strokes = aDecoder.decodeObjectForKey("strokes") as? [Stroke] {
-            strokes = _strokes
-            strokeIndex = strokes.count
+        self.init()
+        if let _decoded = aDecoder.decodeObjectForKey("strokes") as? [Stroke] {
+            strokes = _decoded
         }
         LayerEnum.initWithCoder(aDecoder)
         if let color = aDecoder.decodeObjectForKey("backgroundColor") as? UIColor {
@@ -46,6 +32,18 @@ class Layer : NSObject, NSCoding {
         aCoder.encodeObject(strokes, forKey: "strokes")
         LayerEnum.encodeWithCoder(aCoder)
         aCoder.encodeObject(DrawingOptions.backgroundColor, forKey: "backgroundColor")
+    }
+    
+    func layer(ctx: CGContextRef, withFrame frame: CGRect) -> CGLayerRef? {
+        let cLayer = CGLayerCreateWithContext(ctx, frame.size, nil)
+        let layerCtx = CGLayerGetContext(cLayer)
+        for stroke in strokes {
+            CGContextSetStrokeColorWithColor(layerCtx, stroke.color.CGColor)
+            CGContextSetLineWidth(layerCtx, stroke.path.lineWidth)
+            CGContextAddPath(layerCtx, stroke.path.CGPath)
+            CGContextStrokePath(layerCtx)
+        }
+        return cLayer!
     }
     
     var isEmpty : Bool {
@@ -66,23 +64,44 @@ class Layer : NSObject, NSCoding {
     }
     
     func strokeTo(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
-        if strokeIndex >= strokes.count {
-            let stroke = Stroke(point: point, withColor: color, withLineWidth: lineWidth)
-            strokes.append(stroke)
+        if let stroke = strokes.last {
+            if stroke.isStrokeComplete {
+                startStroke(point, withColor: color, withLineWidth: lineWidth)
+            } else {
+                if stroke.color != color || stroke.path.lineWidth != lineWidth {
+                    stroke.strokeTo(point, withColor: color, withLineWidth: lineWidth)
+                } else {
+                    stroke.strokeTo(point)
+                }
+            }
         } else {
-            strokes[strokeIndex].strokeTo(point, withColor: color, withLineWidth: lineWidth)
+            startStroke(point, withColor: color, withLineWidth: lineWidth)
         }
     }
     
+    private func startStroke(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
+        let stroke = Stroke(point: point, withColor: color, withLineWidth: lineWidth)
+        self.strokes.append(stroke)
+    }
+    
     func finishStroke() {
-        strokeIndex++
+        if let stroke = strokes.last {
+            if stroke.empty {
+                strokes.removeLast()
+            } else {
+                stroke.isStrokeComplete = true
+            }
+        }
     }
     
     func popLast() -> Stroke? {
         if let stroke = strokes.popLast() {
-            strokeIndex--;
             return stroke
         }
         return nil
+    }
+    
+    override var description : String {
+        return "Layer contains \(strokes.count) strokes"
     }
 }

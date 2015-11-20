@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CD3BD1B9A4B38783925D3A3D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EE9D6D1425EB124968F2B2 /* Pods.framework */; };
-		F51016011BEF88ED0001A255 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51016001BEF88ED0001A255 /* OptionsViewController.swift */; };
 		F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */; };
 		F510160E1BEFC64E0001A255 /* DrawingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160D1BEFC64E0001A255 /* DrawingOptions.swift */; };
 		F51016101BEFCAF70001A255 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = F510160F1BEFCAF70001A255 /* Stroke.swift */; };
@@ -19,22 +18,25 @@
 		F52B74F31BEF0660009612F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F21BEF0660009612F8 /* Assets.xcassets */; };
 		F52B74F61BEF0660009612F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F52B74F41BEF0660009612F8 /* LaunchScreen.storyboard */; };
 		F52B74FE1BEF06E3009612F8 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B74FD1BEF06E3009612F8 /* DrawingView.swift */; };
+		F536EC231BFE19E100B14155 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536EC221BFE19E100B14155 /* UIViewExtensions.swift */; };
+		F536EC251BFE1E1000B14155 /* UIImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536EC241BFE1E1000B14155 /* UIImageEffects.swift */; };
+		F536EC271BFE208600B14155 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536EC261BFE208600B14155 /* UIColorExtensions.swift */; };
 		F54BFA2D1BF788C70088BCF1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54BFA2C1BF788C70088BCF1 /* GoogleService-Info.plist */; };
 		F54BFA311BF7A3880088BCF1 /* GAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54BFA301BF7A3880088BCF1 /* GAHelper.swift */; };
 		F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */; };
-		F55FCFE81BF76DA000CC4D1D /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE71BF76DA000CC4D1D /* UIViewControllerExtensions.swift */; };
+		F55FCFE81BF76DA000CC4D1D /* UIBezierPathExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FCFE71BF76DA000CC4D1D /* UIBezierPathExtensions.swift */; };
 		F58206191BF6425100C1E491 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58206181BF6425100C1E491 /* iAd.framework */; };
 		F58F68321BF5098100F59996 /* LayerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F58F68311BF5098100F59996 /* LayerTableViewController.swift */; };
 		F590C58F1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */; };
 		F590C5911BF58F8C00E4D2B1 /* LayerEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = F590C5901BF58F8C00E4D2B1 /* LayerEnum.swift */; };
 		F5D1F1911BF56C8400844824 /* Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D1F1901BF56C8400844824 /* Orientation.swift */; };
+		F5F0F13D1BFD6C690099D9C1 /* MathHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F0F13C1BFD6C690099D9C1 /* MathHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		15EE9D6D1425EB124968F2B2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		591AED306C819495F17A3E64 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		71CCA0E07E74FA513B7C2023 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		F51016001BEF88ED0001A255 /* OptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerViewController.swift; sourceTree = "<group>"; };
 		F510160D1BEFC64E0001A255 /* DrawingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingOptions.swift; sourceTree = "<group>"; };
 		F510160F1BEFCAF70001A255 /* Stroke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
@@ -47,16 +49,20 @@
 		F52B74F51BEF0660009612F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F52B74F71BEF0660009612F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F52B74FD1BEF06E3009612F8 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		F536EC221BFE19E100B14155 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		F536EC241BFE1E1000B14155 /* UIImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageEffects.swift; sourceTree = "<group>"; };
+		F536EC261BFE208600B14155 /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		F54BFA2C1BF788C70088BCF1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F54BFA2F1BF789B40088BCF1 /* Drawn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Drawn-Bridging-Header.h"; sourceTree = "<group>"; };
 		F54BFA301BF7A3880088BCF1 /* GAHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAHelper.swift; sourceTree = "<group>"; };
 		F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtensions.swift; sourceTree = "<group>"; };
-		F55FCFE71BF76DA000CC4D1D /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F55FCFE71BF76DA000CC4D1D /* UIBezierPathExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBezierPathExtensions.swift; sourceTree = "<group>"; };
 		F58206181BF6425100C1E491 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		F58F68311BF5098100F59996 /* LayerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerTableViewController.swift; sourceTree = "<group>"; };
 		F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelperFunctions.swift; sourceTree = "<group>"; };
 		F590C5901BF58F8C00E4D2B1 /* LayerEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerEnum.swift; sourceTree = "<group>"; };
 		F5D1F1901BF56C8400844824 /* Orientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Orientation.swift; sourceTree = "<group>"; };
+		F5F0F13C1BFD6C690099D9C1 /* MathHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				F52B74ED1BEF0660009612F8 /* DrawingViewController.swift */,
-				F51016001BEF88ED0001A255 /* OptionsViewController.swift */,
 				F510160A1BEFAE4B0001A255 /* ColorPickerViewController.swift */,
 				F58F68311BF5098100F59996 /* LayerTableViewController.swift */,
 			);
@@ -176,8 +181,11 @@
 		F55FCFE41BF7672C00CC4D1D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F536EC241BFE1E1000B14155 /* UIImageEffects.swift */,
 				F55FCFE51BF7674300CC4D1D /* UINavigationControllerExtensions.swift */,
-				F55FCFE71BF76DA000CC4D1D /* UIViewControllerExtensions.swift */,
+				F55FCFE71BF76DA000CC4D1D /* UIBezierPathExtensions.swift */,
+				F536EC221BFE19E100B14155 /* UIViewExtensions.swift */,
+				F536EC261BFE208600B14155 /* UIColorExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -187,6 +195,7 @@
 			children = (
 				F590C58E1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift */,
 				F54BFA301BF7A3880088BCF1 /* GAHelper.swift */,
+				F5F0F13C1BFD6C690099D9C1 /* MathHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -324,6 +333,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5F0F13D1BFD6C690099D9C1 /* MathHelper.swift in Sources */,
+				F536EC251BFE1E1000B14155 /* UIImageEffects.swift in Sources */,
 				F590C5911BF58F8C00E4D2B1 /* LayerEnum.swift in Sources */,
 				F55FCFE61BF7674300CC4D1D /* UINavigationControllerExtensions.swift in Sources */,
 				F510160B1BEFAE4B0001A255 /* ColorPickerViewController.swift in Sources */,
@@ -331,10 +342,11 @@
 				F54BFA311BF7A3880088BCF1 /* GAHelper.swift in Sources */,
 				F52B74EE1BEF0660009612F8 /* DrawingViewController.swift in Sources */,
 				F51631351BF112A2005D997B /* Layer.swift in Sources */,
+				F536EC271BFE208600B14155 /* UIColorExtensions.swift in Sources */,
 				F510160E1BEFC64E0001A255 /* DrawingOptions.swift in Sources */,
 				F5D1F1911BF56C8400844824 /* Orientation.swift in Sources */,
-				F55FCFE81BF76DA000CC4D1D /* UIViewControllerExtensions.swift in Sources */,
-				F51016011BEF88ED0001A255 /* OptionsViewController.swift in Sources */,
+				F536EC231BFE19E100B14155 /* UIViewExtensions.swift in Sources */,
+				F55FCFE81BF76DA000CC4D1D /* UIBezierPathExtensions.swift in Sources */,
 				F52B74EC1BEF0660009612F8 /* AppDelegate.swift in Sources */,
 				F590C58F1BF57B0F00E4D2B1 /* FileSystemHelperFunctions.swift in Sources */,
 				F58F68321BF5098100F59996 /* LayerTableViewController.swift in Sources */,

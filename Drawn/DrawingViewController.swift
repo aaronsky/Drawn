@@ -12,14 +12,25 @@ import Photos
 class DrawingViewController: UIViewController {
     
     @IBOutlet weak var drawingView: DrawingView!
+    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var undoButton: UIBarButtonItem!
+    @IBOutlet weak var lineWidthStepper: UIStepper!
+    @IBOutlet weak var strokeStepper: UIStepper!
+    @IBOutlet weak var strokeValueLabel: UIBarButtonItem!
     
+    var currentLineWidth : Float = 3.0
+    
+    //MARK: UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        navigationController?.hidesBarsOnTap = true
-        navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: "toggleNavBar:")
-        navigationController?.setNavigationBarHidden(true, animated: false)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentDrawing:", name: "suspending", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateUndoState:", name: "updateUndoState", object: nil)
+
+        
+        let gesture = UITapGestureRecognizer(target: self, action: "viewWasTapped:")
+        self.view.addGestureRecognizer(gesture)
+        strokeValueLabel.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.blackColor()], forState: .Disabled)
         
         let path = FilePathInDocumentsDirectory("pointsFromClose.archive")
         if let layers = NSKeyedUnarchiver.unarchiveObjectWithFile(path) {
@@ -47,6 +58,22 @@ class DrawingViewController: UIViewController {
         return true
     }
     
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if motion == .MotionShake {
+            promptSaveBeforeClear()
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "ColorPopoverSegue" {
+            let vc = segue.destinationViewController as! ColorPickerViewController
+            vc.selectedColor = drawingView.currentColor
+        } else if segue.identifier == "LayerPopoverSegue" {
+            let vc = (segue.destinationViewController as! UINavigationController).viewControllers.first as! LayerTableViewController
+            vc.selectedImage = drawingView.backgroundImage
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -58,8 +85,32 @@ class DrawingViewController: UIViewController {
         print("Saved \(success) to \(path)")
     }
     
-    func toggleNavBar (tap: UITapGestureRecognizer) {
+    func viewWasTapped(gesture: UIGestureRecognizer) {
+        if gesture.state == .Ended {
+            if CGRectContainsPoint(toolbar.frame, gesture.locationInView(self.view)) {
+                //don't
+                print("shouldn't toggle")
+            } else {
+                toggleNavBar()
+            }
+        }
+    }
+    
+    func toggleNavBar () {
         prefersStatusBarHidden()
+        if navigationController != nil {
+            if navigationController!.navigationBarHidden {
+                navigationController?.setNavigationBarHidden(false, animated: false)
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.toolbar.frame = CGRectOffset(self.toolbar.frame, 0, 0)
+                })
+            } else {
+                navigationController?.setNavigationBarHidden(true, animated: false)
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.toolbar.frame = CGRectOffset(self.toolbar.frame, 0, self.toolbar.frame.height)
+                })
+            }
+        }
     }
     
     func promptSaveBeforeClear() {
@@ -68,18 +119,19 @@ class DrawingViewController: UIViewController {
         if authStatus != PHAuthorizationStatus.Denied {
             let saveAndDeleteAction = UIAlertAction(title: "Save and Delete", style: .Default) { (_) in
                 GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("Delete", action: "Saved", label: "Saved before deleting", value: 0).build() as [NSObject: AnyObject])
-                let image = self.drawingView.createImageFromContext()
-                if authStatus == PHAuthorizationStatus.Authorized {
-                    UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-                    self.promptPreserveBackgroundImageForClear()
-                } else if authStatus == PHAuthorizationStatus.NotDetermined {
-                    PHPhotoLibrary.requestAuthorization({ (status) -> Void in
-                        if status == PHAuthorizationStatus.Authorized {
-                            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-                            self.promptPreserveBackgroundImageForClear()
-                        }
-                    })
-                }
+                self.drawingView.toImage({ (image) -> Void in
+                    if authStatus == PHAuthorizationStatus.Authorized {
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                        self.promptPreserveBackgroundImageForClear()
+                    } else if authStatus == PHAuthorizationStatus.NotDetermined {
+                        PHPhotoLibrary.requestAuthorization({ (status) -> Void in
+                            if status == PHAuthorizationStatus.Authorized {
+                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                                self.promptPreserveBackgroundImageForClear()
+                            }
+                        })
+                    }
+                })
             }
             alertVC.addAction(saveAndDeleteAction)
         }
@@ -108,14 +160,19 @@ class DrawingViewController: UIViewController {
         }
     }
     
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == .MotionShake {
-            promptSaveBeforeClear()
+    //MARK: NSNotification
+    func updateUndoState(notification: NSNotification?) {
+        if let state = notification?.userInfo!["state"] as? Bool {
+            undoButton.enabled = state
+        } else {
+            undoButton.enabled = drawingView.hasHistory
         }
     }
     
-    @IBAction func undo(sender: AnyObject) {
-        self.drawingView.undoStroke()
+    //MARK: IBAction handlers
+    @IBAction func undo(sender: UIBarButtonItem) {
+        drawingView.undoStroke()
+        updateUndoState(nil)
     }
     
     @IBAction func clearDrawing(sender: AnyObject) {
@@ -123,48 +180,45 @@ class DrawingViewController: UIViewController {
     }
     
     @IBAction func shareDrawing(sender: AnyObject) {
-        let image = drawingView.createImageFromContext()
         let messageText = ""
-        let activityVC = UIActivityViewController(activityItems: [messageText, image!], applicationActivities: nil)
-        activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, activityError) in
-            if activityError != nil {
-                print("failure")
-                return
+        drawingView.toImage { (image) -> Void in
+            let activityVC = UIActivityViewController(activityItems: [messageText, image], applicationActivities: nil)
+            activityVC.completionWithItemsHandler = { (activityType, completed, returnedItems, activityError) in
+                if activityError != nil {
+                    print("failure")
+                    return
+                }
+                if completed && activityType != nil {
+                    GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("social", action: activityType!, label: activityType!, value: 0).build() as [NSObject: AnyObject])
+                }
             }
-            if completed && activityType != nil {
-                GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("social", action: activityType!, label: activityType!, value: 0).build() as [NSObject: AnyObject])
+            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+                activityVC.modalPresentationStyle = .Popover
+                activityVC.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
             }
+            self.presentViewController(activityVC, animated: true, completion: nil)
         }
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            activityVC.modalPresentationStyle = .Popover
-            activityVC.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
-        }
-        presentViewController(activityVC, animated: true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "ColorWheelSegue" {
-            let vc = segue.destinationViewController as! OptionsViewController
-            vc.currentColor = drawingView.currentColor
-            vc.currentLineWidth = drawingView.currentLineWidth
-            vc.selectedImage = drawingView.backgroundImage
-        }
+    @IBAction func strokeStepperValueChanged(sender: UIStepper) {
+        drawingView.currentLineWidth = CGFloat(floor(sender.value))
+        strokeValueLabel.title = "Stroke: \(drawingView.currentLineWidth)"
+        GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "lineWidth", label: "lineWidth", value: currentLineWidth).build() as [NSObject: AnyObject])
     }
     
     @IBAction func prepareForUnwind (segue: UIStoryboardSegue) {
-        if let optionsVC = segue.sourceViewController as? OptionsViewController {
-            drawingView.currentColor = optionsVC.currentColor
-            drawingView.currentLineWidth = optionsVC.currentLineWidth
+        if let colorVC = segue.sourceViewController as? ColorPickerViewController {
+            drawingView.currentColor = colorVC.selectedColor
             if DrawingOptions.didSetBackground {
                 drawingView.backgroundColor = DrawingOptions.backgroundColor
                 DrawingOptions.didSetBackground = false
             }
-            if let image = optionsVC.selectedImage {
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "color", label: colorVC.selectedColor.description, value: 0).build() as [NSObject: AnyObject])
+        } else if let layerVC = segue.sourceViewController as? LayerTableViewController {
+            if let image = layerVC.selectedImage {
                 drawingView.backgroundImage = image
                 drawingView.setNeedsDisplay()
             }
-            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "color", label: optionsVC.currentColor.description, value: 0).build() as [NSObject: AnyObject])
-            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("options", action: "lineWidth", label: "lineWidth", value: optionsVC.currentLineWidth).build() as [NSObject: AnyObject])
         }
     }
 }

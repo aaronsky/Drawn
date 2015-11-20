@@ -7,15 +7,16 @@
 //
 
 import UIKit
+import iAd
 
-class ColorPickerViewController: UIViewController {
+class ColorPickerViewController: UIViewController, ADBannerViewDelegate {
     enum ColorMode : Int {
         case Rgb = 0
         case Hsv = 1
     }
     
+    //MARK: IBOutlets
     @IBOutlet weak var rgbOrHsvPicker: UISegmentedControl!
-    
     @IBOutlet weak var redHueLabel: UILabel!
     @IBOutlet weak var redHueSlider: UISlider!
     @IBOutlet weak var greenSaturationLabel: UILabel!
@@ -24,21 +25,44 @@ class ColorPickerViewController: UIViewController {
     @IBOutlet weak var blueValueSlider: UISlider!
     @IBOutlet weak var alphaLabel: UILabel!
     @IBOutlet weak var alphaSlider: UISlider!
+    @IBOutlet weak var colorView: UIView!
+    @IBOutlet weak var opacityLayerView: UIImageView!
+    @IBOutlet weak var colorLabel: UILabel!
+    @IBOutlet weak var oldColorView: UIView!
+    @IBOutlet weak var oldOpacityLayerView: UIImageView!
+    @IBOutlet weak var adBannerView: ADBannerView!
     
+    //MARK: Members
+    var isBannerVisible : Bool = false
     lazy var selectedColor : UIColor = UIColor()
+    private var isAlphaVisible : Bool = true
     
+    //MARK: UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enableAlphaControls:", name: "enableAlphaControls", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "disableAlphaControls:", name: "disableAlphaControls", object: nil)
+        isAlphaVisible = DrawingOptions.selectedLayer != LayerEnum.Background
+        
+        alphaLabel.userInteractionEnabled = isAlphaVisible
+        alphaLabel.hidden = !isAlphaVisible
+        alphaSlider.userInteractionEnabled = isAlphaVisible
+        alphaSlider.hidden = !isAlphaVisible
+        opacityLayerView.hidden = !isAlphaVisible
+        
+        updateColor(selectedColor, updateOld: true)
         resetUIForColorMode(.Rgb)
+        
+        adBannerView.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
     }
     
     @IBAction func switchColorState(sender: UISegmentedControl) {
@@ -52,8 +76,9 @@ class ColorPickerViewController: UIViewController {
             resetUIForColorMode(.Hsv)
         }
     }
+    
     @IBAction func colorSliderValueChanged(sender: UISlider) {
-        notify()
+        updateColor()
     }
     
     func resetUIForColorMode(colorMode: ColorMode = .Rgb) {
@@ -87,43 +112,85 @@ class ColorPickerViewController: UIViewController {
             blueValueSlider.value = scale(Float(bv), minStart: 0, minEnd: 1, maxStart: 0, maxEnd: 100)
             alphaSlider.value = Float(alpha)
         }
-        notify()
+        updateColor()
     }
     
-    func enableAlphaControls (notification: NSNotification?) {
-        alphaSlider.hidden = false
-        alphaSlider.enabled = true
-        alphaSlider.userInteractionEnabled = true
-        NSNotificationCenter.defaultCenter().postNotificationName("updateColor", object: self, userInfo: ["color":selectedColor])
-    }
-    
-    func disableAlphaControls (notification: NSNotification?) {
-        alphaSlider.userInteractionEnabled = false
-        alphaSlider.enabled = false
-        alphaSlider.hidden = true
-        NSNotificationCenter.defaultCenter().postNotificationName("updateColor", object: self, userInfo: ["color":selectedColor])
-    }
-    
-    func notify() {
-        calculateColor()
-        NSNotificationCenter.defaultCenter().postNotificationName("updateColor", object: self, userInfo: ["color":selectedColor])
-    }
-    
-    func calculateColor () {
+    func calculateColor () -> UIColor {
         let red = scale(redHueSlider.value, minStart: redHueSlider.minimumValue, minEnd: redHueSlider.maximumValue, maxStart: 0.0, maxEnd: 1.0)
         let green = scale(greenSaturationSlider.value, minStart: greenSaturationSlider.minimumValue, minEnd: greenSaturationSlider.maximumValue, maxStart: 0.0, maxEnd: 1.0)
         let blue = scale(blueValueSlider.value, minStart: blueValueSlider.minimumValue, minEnd: blueValueSlider.maximumValue, maxStart: 0.0, maxEnd: 1.0)
         let mode = ColorMode(rawValue: rgbOrHsvPicker.selectedSegmentIndex)!
         switch mode {
         case .Rgb:
-            selectedColor = UIColor(red: CGFloat(red) , green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alphaSlider.value))
+            return UIColor(red: CGFloat(red) , green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alphaSlider.value))
         case .Hsv:
-            selectedColor = UIColor(hue: CGFloat(red), saturation: CGFloat(green), brightness: CGFloat(blue), alpha: CGFloat(alphaSlider.value))
+            return UIColor(hue: CGFloat(red), saturation: CGFloat(green), brightness: CGFloat(blue), alpha: CGFloat(alphaSlider.value))
         }
     }
     
-    func scale(x:Float, minStart:Float, minEnd:Float, maxStart:Float, maxEnd:Float) -> Float {
-        return ((x - minStart) / (minEnd - minStart)) * (maxEnd - maxStart) + maxStart
+    func updateColor () {
+        let color = calculateColor()
+        updateColor(color)
+    }
+    
+    func updateColor (color: UIColor, updateOld flag: Bool = false) {
+        colorView.backgroundColor = color
+        var red:CGFloat = 0, green:CGFloat = 0, blue:CGFloat = 0, alpha:CGFloat = 0
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        if flag {
+            oldColorView.backgroundColor = color
+        }
+        if isAlphaVisible {
+            if flag {
+                oldOpacityLayerView.alpha = 1.0 - alpha
+            }
+            opacityLayerView.alpha = 1.0 - alpha
+            colorLabel.text = String(format: "#%02X%02X%02X%02X",
+                Int(red * 255.0),
+                Int(green * 255.0),
+                Int(blue * 255.0),
+                Int(alpha * 255.0))
+        } else {
+            colorLabel.text = String(format: "#%02X%02X%02X",
+                Int(red * 255.0),
+                Int(green * 255.0),
+                Int(blue * 255.0))
+            
+        }
+        if DrawingOptions.didSetBackground {
+            DrawingOptions.backgroundColor = color
+        } else {
+            selectedColor = color
+        }
+    }
+        
+    //MARK: ADBannerViewDelegate methods
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        if isBannerVisible {
+            if adBannerView.superview == nil {
+                self.view.addSubview(adBannerView)
+            }
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                self.adBannerView.frame = CGRectOffset(self.adBannerView.frame, 0, -self.adBannerView.frame.height)
+                }, completion: { (success) -> Void in
+                    if success {
+                        self.isBannerVisible = true
+                    }
+            })
+        }
+    }
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        print("failed to receive ad")
+        if isBannerVisible {
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                self.adBannerView.frame = CGRectOffset(self.adBannerView.frame, 0, self.adBannerView.frame.height)
+                }, completion: { (success) -> Void in
+                    if success {
+                        self.isBannerVisible = false
+                    }
+            })
+        }
     }
     
 }

@@ -11,7 +11,7 @@ import UIKit
 class DrawingView: UIView {
     
     var layers : [Layer] = [Layer(), Layer(), Layer()]
-    var currentColor : UIColor = UIColor.whiteColor()
+    var currentColor : UIColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     var currentLineWidth : CGFloat = 3.0
     var backgroundImage : UIImage?
     private lazy var history : [LayerEnum] = [LayerEnum]()
@@ -32,15 +32,6 @@ class DrawingView: UIView {
     }
     
     //MARK: DrawingView functions
-    func createImageFromContext () -> UIImage? {
-        print("create image from context")
-        UIGraphicsBeginImageContext(frame.size)
-        layer.renderInContext(UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
-    }
-    
     func clear (clearImage flag: Bool = true) {
         print("clear the screen")
         LayerEnum.resetDescriptions()
@@ -54,6 +45,10 @@ class DrawingView: UIView {
             layer.clear()
         }
         setNeedsDisplay()
+    }
+    
+    var hasHistory : Bool {
+        return !history.isEmpty
     }
     
     func undoStroke () {
@@ -90,12 +85,6 @@ class DrawingView: UIView {
         }        
     }
     
-    func drawLayers() {
-        //back
-        //front
-        //blit front onto back
-    }
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
             let point = touch.locationInView(self)
@@ -114,6 +103,7 @@ class DrawingView: UIView {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         layers[DrawingOptions.selectedLayer.rawValue].finishStroke()
         history.append(DrawingOptions.selectedLayer)
+        NSNotificationCenter.defaultCenter().postNotificationName("updateUndoState", object: self, userInfo: ["state":true])
         setNeedsDisplay()
     }
     

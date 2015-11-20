@@ -8,27 +8,15 @@
 
 import UIKit
 
-class LayerTableViewController: UITableViewController {
+class LayerTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var image : UIImage?
+    var selectedImage : UIImage?
     
     //MARK: View lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedImageFromPicker:", name: "selectedImageFromPicker", object: nil)
         if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: DrawingOptions.selectedLayer.rawValue, inSection: 0)) {
             cell.accessoryType = .Checkmark
-        }
-    }
-    
-    //MARK: NSNotification
-    func selectedImageFromPicker(notification: NSNotification?) {
-        GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("image", action: "Set BG", label: "Set image as backdrop", value: 0).build() as [NSObject: AnyObject])
-        if let image: UIImage = notification?.userInfo!["image"] as? UIImage {
-            if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) {
-                cell.imageView?.image = image
-                tableView.setEditing(false, animated: true)
-            }
         }
     }
     
@@ -42,7 +30,7 @@ class LayerTableViewController: UITableViewController {
             case "Layer2Cell": cell.textLabel?.text = LayerEnum.Two.description; break
             case "BackgroundCell":
                 cell.textLabel?.text = LayerEnum.Background.description;
-                cell.imageView?.image = image
+                cell.imageView?.image = selectedImage
                 break
             default: break
             }
@@ -68,7 +56,7 @@ class LayerTableViewController: UITableViewController {
                 break
             case "BackgroundCell":
                 DrawingOptions.didSetBackground = true;
-                NSNotificationCenter.defaultCenter().postNotificationName("disableAlphaControls", object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("disableAlphaControls", object: self)
                 GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("layer", action: "Set Layer", label: "Set layer to BG", value: LayerEnum.Background.rawValue).build() as [NSObject: AnyObject])
                 break
             default: DrawingOptions.selectedLayer = LayerEnum.Zero; break
@@ -80,7 +68,7 @@ class LayerTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.reuseIdentifier == "BackgroundCell" {
-                NSNotificationCenter.defaultCenter().postNotificationName("enableAlphaControls", object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("enableAlphaControls", object: self)
             }
             cell.accessoryType = .None
         }
@@ -95,7 +83,7 @@ class LayerTableViewController: UITableViewController {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if cell.reuseIdentifier == "BackgroundCell" {
                 let chooseImageAction = UITableViewRowAction(style: .Default, title: "Choose Image") { (action, indexPath) in
-                    NSNotificationCenter.defaultCenter().postNotificationName("loadBackgroundImage", object: nil)
+                    self.showImagePicker()
                 }
                 actions.append(chooseImageAction)
             } else {
@@ -107,6 +95,15 @@ class LayerTableViewController: UITableViewController {
             }
         }
         return actions
+    }
+    
+    func showImagePicker () {
+        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            let pickerVC = UIImagePickerController()
+            pickerVC.sourceType = .PhotoLibrary
+            pickerVC.delegate = self
+            presentViewController(pickerVC, animated: true, completion: nil)
+        }
     }
     
     func editLayerName(indexPath: NSIndexPath) {
@@ -130,5 +127,20 @@ class LayerTableViewController: UITableViewController {
             }))
             presentViewController(alertVC, animated: true, completion: nil)
         }
+    }
+    
+    //MARK: UIImagePickerControllerDelegate methods
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        selectedImage = image
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        if let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) {
+            cell.imageView?.image = selectedImage
+            tableView.setEditing(false, animated: true)
+            GAHelper.trackerInstance?.send(GAIDictionaryBuilder.createEventWithCategory("Options", action: "Set image as background", label: selectedImage?.description, value: 0).build() as [NSObject: AnyObject])
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
     }
 }

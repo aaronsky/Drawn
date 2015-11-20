@@ -21,14 +21,18 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="UfF-vG-UYY">
                                 <rect key="frame" x="110" y="196" width="380" height="208"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="208" id="K3K-UW-dUb"/>
+                                    <constraint firstAttribute="width" constant="380" id="c0U-iP-6Nh"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="WXX-24-Mpc"/>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="90" id="tEz-Yr-5FA"/>
-                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="xUH-ne-NWx"/>
+                            <constraint firstItem="UfF-vG-UYY" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="90" id="77s-YO-Ht7"/>
+                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Qn9-19-chb"/>
+                            <constraint firstItem="UfF-vG-UYY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="gWz-vw-Y5W"/>
                         </constraints>
                     </view>
                 </viewController>
