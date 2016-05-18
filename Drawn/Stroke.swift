@@ -19,23 +19,23 @@ class Stroke : NSObject, NSCoding {
     }
     
     override init() {
-        print("Stroke - \(__FUNCTION__) called")
+        print("Stroke - \(#function) called")
         super.init()
         path.lineCapStyle = .Round
         path.lineJoinStyle = .Round
     }
     
     init(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {
-        print("Stroke - \(__FUNCTION__) called")
+        print("Stroke - \(#function) called")
         super.init()
         path.lineCapStyle = .Round
         path.lineJoinStyle = .Round
         path.moveToPoint(point)
-        pointCount++
+        pointCount += 1
     }
     
     required internal init?(coder aDecoder: NSCoder) {
-        print("Stroke - \(__FUNCTION__) called")
+        print("Stroke - \(#function) called")
         super.init()
         if let _path = aDecoder.decodeObjectForKey("path") as? UIBezierPath {
             path = _path
@@ -57,7 +57,7 @@ class Stroke : NSObject, NSCoding {
     
     func strokeTo(point: CGPoint) {
         path.addLineToPoint(point)
-        pointCount++
+        pointCount += 1
     }
     
     func strokeTo(point: CGPoint, withColor color: UIColor, withLineWidth lineWidth: CGFloat) {

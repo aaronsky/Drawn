@@ -12,12 +12,12 @@ class Layer : NSObject, NSCoding {
     var strokes : [Stroke] = [Stroke]()
     
     override init() {
-        print("Layer - \(__FUNCTION__) called")
+        print("Layer - \(#function) called")
         super.init()
     }
     
     convenience required init?(coder aDecoder: NSCoder) {
-        print("Layer - \(__FUNCTION__) called")
+        print("Layer - \(#function) called")
         self.init()
         if let _decoded = aDecoder.decodeObjectForKey("strokes") as? [Stroke] {
             strokes = _decoded

@@ -24,11 +24,11 @@ class DrawingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveCurrentDrawing:", name: "suspending", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateUndoState:", name: "updateUndoState", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DrawingViewController.saveCurrentDrawing(_:)), name: "suspending", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DrawingViewController.updateUndoState(_:)), name: "updateUndoState", object: nil)
 
         
-        let gesture = UITapGestureRecognizer(target: self, action: "viewWasTapped:")
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(DrawingViewController.viewWasTapped(_:)))
         self.view.addGestureRecognizer(gesture)
         strokeValueLabel.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.blackColor()], forState: .Disabled)
         
